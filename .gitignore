@@ -15,6 +15,7 @@
 
 # AWS User-specific
 .idea/**/aws.xml
+.DS_Store
 
 # Generated files
 .idea/**/contentModel.xml
