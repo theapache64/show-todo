@@ -9,23 +9,23 @@ import kotlin.io.path.div
 import kotlin.io.path.writeText
 
 internal object AuthorPageGenerator {
-    fun generatePage(showTodoDir: Path, authorMap: Map<Author, List<Todo>>) {
+    fun generatePage(projectDir: File, showTodoDir: Path, authorMap: Map<Author, List<Todo>>) {
         for ((author, authorTodos) in authorMap) {
-            createAuthorPage(showTodoDir, author, authorTodos)
+            createAuthorPage(projectDir, showTodoDir, author, authorTodos)
         }
     }
 
-    private fun createAuthorPage(showToDoDir: Path, author: Author, authorTodos: List<Todo>) {
+    private fun createAuthorPage(projectDir: File, showToDoDir: Path, author: Author, authorTodos: List<Todo>) {
         val authorPage = showToDoDir / hashedHtmlFileName(author)
         authorPage.toFile().delete()
         val authorPageContent = "author_template.html".readAsResource()
             .replace(KEY_PAGE_TITLE, "${author.name} - ${author.email} | show-todo")
-            .replace(KEY_PAGE_CONTENT, getAuthorPageContent(author, authorTodos))
+            .replace(KEY_PAGE_CONTENT, getAuthorPageContent(projectDir, author, authorTodos))
 
         authorPage.writeText(authorPageContent)
     }
 
-    private fun getAuthorPageContent(author: Author, authorTodos: List<Todo>): String {
+    private fun getAuthorPageContent(projectDir: File, author: Author, authorTodos: List<Todo>): String {
         val sb = StringBuilder()
         sb.append(
             """
@@ -37,8 +37,16 @@ internal object AuthorPageGenerator {
             val highlightContent = parseHighlightContent(todo)
             sb.append(
                 """
-            <pre><code class="language-${getLanguage(todo.file)}">${highlightContent.trim()}</code></pre>
-        """.trimIndent()
+                   <div>
+                   <h4>${todo.file.name} <small>${
+                    todo.file.absolutePath.replace(
+                        projectDir.absolutePath + "/",
+                        ""
+                    )
+                }</small></h4>
+                   <pre><code class="language-${getLanguage(todo.file)}">${highlightContent.trim()}</code></pre>
+                   </div>
+               """.trimIndent()
             )
         }
         sb.append(

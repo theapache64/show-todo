@@ -10,10 +10,11 @@ import kotlin.io.path.writeText
 
 internal object IndexPageGenerator {
 
-    fun generatePage(showTodoDir: Path, projectDir: File, authorMap: Map<Author, List<Todo>>) {
+    fun generatePage(showTodoDir: Path, projectDir: File, authorMap: Map<Author, List<Todo>>): Path {
         val indexHtml = showTodoDir / "index.html"
         val indexContent = getIndexContent(projectDir, authorMap)
         indexHtml.writeText(indexContent)
+        return indexHtml
     }
 
     private fun getIndexContent(projectDir: File, authorMap: Map<Author, List<Todo>>): String {

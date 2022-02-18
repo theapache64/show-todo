@@ -14,6 +14,9 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+
+    // ProgressBar : A terminal-based progress bar for JVM
+    implementation("me.tongfei:progressbar:0.9.3")
 }
 
 tasks.test {

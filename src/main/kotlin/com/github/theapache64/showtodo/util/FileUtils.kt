@@ -5,6 +5,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
 
+
 object FileUtils {
     /**
      * To check if the given file is binary or not
@@ -32,7 +33,7 @@ object FileUtils {
     }
 
     fun String.readAsResource(): String {
-        return FileUtils::class.java.getResource(this).readText()
+        return FileUtils::class.java.classLoader.getResourceAsStream(this).bufferedReader().readText()
     }
-
 }
+

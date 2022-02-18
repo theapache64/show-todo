@@ -4,7 +4,6 @@ import com.github.theapache64.showtodo.core.HtmlGenerator
 import com.github.theapache64.showtodo.core.TodoParser
 import java.io.File
 
-
 fun main(args: Array<String>) {
     // val currentDir = File(System.getProperty("user.dir"))
     val currentDir = File("/Users/theapache64/Documents/projects/hotstar/compass")
@@ -14,6 +13,8 @@ fun main(args: Array<String>) {
     }
 
     val todos = TodoParser.parseTodo(projectDir = currentDir)
-    HtmlGenerator.generateReport(currentDir, todos)
+    if (todos.isNotEmpty()) {
+        HtmlGenerator.generateReport(currentDir, todos)
+    }
 }
 

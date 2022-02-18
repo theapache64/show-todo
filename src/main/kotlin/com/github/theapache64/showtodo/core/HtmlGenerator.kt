@@ -11,20 +11,25 @@ internal const val KEY_PAGE_CONTENT = "{{PAGE_CONTENT}}"
 
 object HtmlGenerator {
     fun generateReport(projectDir: File, todos: List<Todo>) {
+        println("📝 Generating report...")
         // Create directory
         val showTodoDir = projectDir.toPath() / "build" / "show-todo"
         showTodoDir.toFile().deleteRecursively()
         showTodoDir.createDirectories()
 
-        // com.github.theapache64.showtodo.Author map
+        // author map
         val authorMap = todos.groupBy { it.author }
-            .toSortedMap(comparator = { author1, author2 -> "${author1.name}${author1.email}".compareTo("${author2.name}${author2.email}") })
+            .toSortedMap(comparator = { author1, author2 ->
+                author1.toString().compareTo(author2.toString())
+            })
 
         // Create index
-        IndexPageGenerator.generatePage(showTodoDir, projectDir, authorMap)
+        val indexPagePath = IndexPageGenerator.generatePage(showTodoDir, projectDir, authorMap)
 
         // Create author pages
-        AuthorPageGenerator.generatePage(showTodoDir, authorMap)
+        AuthorPageGenerator.generatePage(projectDir, showTodoDir, authorMap)
+
+        println("✅ Report generated: file://${indexPagePath.toFile().absolutePath}")
     }
 
 }
