@@ -12,7 +12,10 @@
 
 ### ✨ Demo
 
-![](show-todo-demo.mp4)
+
+https://user-images.githubusercontent.com/9678279/154778273-54b72cbc-1260-4e66-98a1-0982b4e13380.mp4
+
+
 
 ## 🚀 Install 
 
