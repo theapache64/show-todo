@@ -8,7 +8,7 @@
 <img alt="Twitter: theapache64" src="https://img.shields.io/twitter/follow/theapache64.svg?style=social" />
 </a>
 
-> A simple utility to find your TODOs when working in a team
+> A simple utility to find your TODOs while working in a team
 
 ### ✨ Demo
 
