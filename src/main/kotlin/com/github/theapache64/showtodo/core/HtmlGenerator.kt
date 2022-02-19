@@ -1,7 +1,9 @@
 package com.github.theapache64.showtodo.core
 
 import com.github.theapache64.showtodo.model.Todo
+import java.awt.Desktop
 import java.io.File
+import java.net.URI
 import kotlin.io.path.createDirectories
 import kotlin.io.path.div
 
@@ -29,7 +31,9 @@ object HtmlGenerator {
         // Create author pages
         AuthorPageGenerator.generatePage(projectDir, showTodoDir, authorMap)
 
-        println("✅ Report generated: file://${indexPagePath.toFile().absolutePath}")
+        val fileUri = "file://${indexPagePath.toFile().absolutePath}"
+        println("✅ Report generated: $fileUri")
+        Desktop.getDesktop().browse(URI(fileUri))
     }
 
 }
