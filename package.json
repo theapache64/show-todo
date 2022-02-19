@@ -1,0 +1,15 @@
+{
+  "bin": {"show-todo": "jdeploy-bundle/jdeploy.js"},
+  "author": "theapache64",
+  "description": "A simple utility to find TODOs and their owners",
+  "main": "index.js",
+  "preferGlobal": true,
+  "repository": "https://github.com/theapache64/show-todo",
+  "version": "1.0.1",
+  "jdeploy": {"jar": "out/artifacts/show_todo_main_jar/show-todo.main.jar"},
+  "dependencies": {"shelljs": "0.8.4"},
+  "license": "ISC",
+  "name": "show-todo",
+  "files": ["jdeploy-bundle"],
+  "scripts": {"test": "echo \"Error: no test specified\" && exit 1"}
+}

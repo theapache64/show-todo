@@ -6,6 +6,7 @@ import java.io.File
 
 fun main(args: Array<String>) {
     val currentDir = File(System.getProperty("user.dir"))
+    println("🗂 Project : ${currentDir.absolutePath}")
     // val currentDir = File("/Users/theapache64/Documents/projects/compose-jb")
     if (!currentDir.resolve(".git").exists()) {
         println("$currentDir is not a git project")

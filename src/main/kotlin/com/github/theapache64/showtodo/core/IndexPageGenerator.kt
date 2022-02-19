@@ -2,13 +2,30 @@ package com.github.theapache64.showtodo.core
 
 import com.github.theapache64.showtodo.model.Author
 import com.github.theapache64.showtodo.model.Todo
-import com.github.theapache64.showtodo.util.FileUtils.readAsResource
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.div
 import kotlin.io.path.writeText
 
 internal object IndexPageGenerator {
+    private val TEMPLATE = """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>{{PAGE_TITLE}}</title>
+
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        </head>
+        <body>
+            {{PAGE_CONTENT}}
+        </body>
+
+        </html>
+    """.trimIndent()
 
     fun generatePage(showTodoDir: Path, projectDir: File, authorMap: Map<Author, List<Todo>>): Path {
         val indexHtml = showTodoDir / "index.html"
@@ -61,10 +78,8 @@ internal object IndexPageGenerator {
         """.trimIndent()
         )
 
-        val template = "index_template.html".readAsResource()
-        return template
+        return TEMPLATE
             .replace(KEY_PAGE_TITLE, "${projectDir.name} | Index | show-todo")
             .replace(KEY_PAGE_CONTENT, sb.toString())
     }
-
 }

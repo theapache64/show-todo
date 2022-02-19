@@ -32,8 +32,5 @@ object FileUtils {
         return if (other == 0) false else 100 * other / (ascii + other) > 95
     }
 
-    fun String.readAsResource(): String {
-        return FileUtils::class.java.classLoader.getResourceAsStream(this).bufferedReader().readText()
-    }
 }
 
