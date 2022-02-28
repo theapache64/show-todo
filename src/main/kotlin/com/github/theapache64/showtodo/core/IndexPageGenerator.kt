@@ -1,7 +1,8 @@
 package com.github.theapache64.showtodo.core
 
+import com.github.theapache64.showtodo.Mode
 import com.github.theapache64.showtodo.model.Author
-import com.github.theapache64.showtodo.model.Todo
+import com.github.theapache64.showtodo.model.Line
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.div
@@ -27,27 +28,27 @@ internal object IndexPageGenerator {
         </html>
     """.trimIndent()
 
-    fun generatePage(showTodoDir: Path, projectDir: File, authorMap: Map<Author, List<Todo>>): Path {
+    fun generatePage(showTodoDir: Path, projectDir: File, authorMap: Map<Author, List<Line>>, mode :Mode): Path {
         val indexHtml = showTodoDir / "index.html"
-        val indexContent = getIndexContent(projectDir, authorMap)
+        val indexContent = getIndexContent(projectDir, authorMap, mode)
         indexHtml.writeText(indexContent)
         return indexHtml
     }
 
-    private fun getIndexContent(projectDir: File, authorMap: Map<Author, List<Todo>>): String {
+    private fun getIndexContent(projectDir: File, authorMap: Map<Author, List<Line>>, mode : Mode): String {
         val sb = StringBuilder()
 
         sb.append(
             """
         
         <div class="container">
-            <h2>${projectDir.name} - TODOs (${authorMap.values.sumOf { it.size }})</h2>
+            <h2>${projectDir.name} - $mode (${authorMap.values.sumOf { it.size }})</h2>
             <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>TODO Count</th>
+                    <th>$mode Count</th>
                     <th>Actions</th>
                 </tr>
                 </thead>

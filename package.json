@@ -5,7 +5,7 @@
   "main": "index.js",
   "preferGlobal": true,
   "repository": "https://github.com/theapache64/show-todo",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "jdeploy": {"jar": "out/artifacts/show_todo_main_jar/show-todo.main.jar"},
   "dependencies": {"shelljs": "0.8.4"},
   "license": "ISC",

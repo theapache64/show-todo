@@ -2,9 +2,18 @@ package com.github.theapache64.showtodo
 
 import com.github.theapache64.showtodo.core.HtmlGenerator
 import com.github.theapache64.showtodo.core.TodoParser
+import java.awt.Desktop
 import java.io.File
+import java.net.URI
+import kotlin.io.path.absolutePathString
+
+enum class Mode {
+    TODO,
+    DOUBLE_BANG
+}
 
 fun main(args: Array<String>) {
+
     val currentDir = File(System.getProperty("user.dir"))
     println("🗂 Project : ${currentDir.absolutePath}")
     // val currentDir = File("/Users/theapache64/Documents/projects/compose-jb")
@@ -13,9 +22,27 @@ fun main(args: Array<String>) {
         return
     }
 
-    val todos = TodoParser.parseTodo(projectDir = currentDir)
-    if (todos.isNotEmpty()) {
-        HtmlGenerator.generateReport(currentDir, todos)
+    val mode = when {
+        args.contains("bang") -> Mode.DOUBLE_BANG
+        else -> Mode.TODO
+    }
+    println("➡️ Mode: $mode")
+
+    val isOpen = args.contains("open")
+    if (isOpen) {
+        // Open index file in browser
+        Desktop.getDesktop().browse(
+            URI(
+                "file://${HtmlGenerator.getIndexFile(currentDir).absolutePathString()}"
+            )
+        )
+    } else {
+
+
+        val todos = TodoParser.parseTodo(projectDir = currentDir, mode = mode)
+        if (todos.isNotEmpty()) {
+            HtmlGenerator.generateReport(currentDir, todos, mode)
+        }
     }
 }
 

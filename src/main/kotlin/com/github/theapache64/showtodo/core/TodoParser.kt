@@ -1,6 +1,7 @@
 package com.github.theapache64.showtodo.core
 
-import com.github.theapache64.showtodo.model.Todo
+import com.github.theapache64.showtodo.Mode
+import com.github.theapache64.showtodo.model.Line
 import com.github.theapache64.showtodo.util.FileUtils
 import com.github.theapache64.showtodo.util.GitUtils
 import me.tongfei.progressbar.ProgressBar
@@ -13,7 +14,7 @@ object TodoParser {
     }
 
 
-    fun parseTodo(projectDir: File): List<Todo> {
+    fun parseTodo(mode: Mode, projectDir: File): List<Line> {
         if (projectDir.isFile) error("Directory expected, but ${projectDir.name} is a file.")
 
         val iterator = projectDir.walk()
@@ -23,14 +24,14 @@ object TodoParser {
             }
             .iterator()
 
-        val todos = mutableListOf<Todo>()
+        val lines = mutableListOf<Line>()
         for (file in ProgressBar.wrap(iterator, "🔍 Analysing...")) {
             file.readLines().forEachIndexed { index, line ->
-                if (hasTodo(line.trim())) {
+                if (isMatch(mode, line)) {
                     val lineNo = index + 1
                     val author = GitUtils.getAuthor(projectDir, file, lineNo)
-                    todos.add(
-                        Todo(
+                    lines.add(
+                        Line(
                             file = file,
                             lineNo = lineNo,
                             author = author
@@ -39,20 +40,26 @@ object TodoParser {
                 }
             }
         }
-        println("👌🏻 Analysis finished: Found ${todos.size} TODO(s)")
-        return todos
+        println("👌🏻 Analysis finished: Found ${lines.size} items(s) ($mode)")
+        return lines
     }
 
+    private fun isMatch(mode: Mode, line: String): Boolean {
+        return when (mode) {
+            Mode.TODO -> hasTodo(line.trim())
+            Mode.DOUBLE_BANG -> line.contains("!!")
+        }
+    }
 
     /**
      * TODO: Detection should be improved. This implementation only detects if the line has [todoRegex]
      */
-    fun hasTodo(line: String): Boolean {
+    private fun hasTodo(line: String): Boolean {
         val word = todoRegex.find(line)?.groupValues?.get(1) ?: return false
         return line.startsWith("*") || line.startsWith("/*") || hasSlashBeforeTodo(word, line)
     }
 
-    fun hasSlashBeforeTodo(word: String, line: String): Boolean {
+    private fun hasSlashBeforeTodo(word: String, line: String): Boolean {
         if (!line.contains("//")) return false
         val slashIndex = line.lastIndexOf("//")
         val todoIndex = line.lastIndexOf(word)

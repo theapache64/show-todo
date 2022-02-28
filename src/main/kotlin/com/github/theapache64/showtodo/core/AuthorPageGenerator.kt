@@ -1,7 +1,7 @@
 package com.github.theapache64.showtodo.core
 
 import com.github.theapache64.showtodo.model.Author
-import com.github.theapache64.showtodo.model.Todo
+import com.github.theapache64.showtodo.model.Line
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.div
@@ -31,23 +31,23 @@ internal object AuthorPageGenerator {
         </html>
     """.trimIndent()
 
-    fun generatePage(projectDir: File, showTodoDir: Path, authorMap: Map<Author, List<Todo>>) {
+    fun generatePage(projectDir: File, showTodoDir: Path, authorMap: Map<Author, List<Line>>) {
         for ((author, authorTodos) in authorMap) {
             createAuthorPage(projectDir, showTodoDir, author, authorTodos)
         }
     }
 
-    private fun createAuthorPage(projectDir: File, showToDoDir: Path, author: Author, authorTodos: List<Todo>) {
+    private fun createAuthorPage(projectDir: File, showToDoDir: Path, author: Author, authorLines: List<Line>) {
         val authorPage = showToDoDir / hashedHtmlFileName(author)
         authorPage.toFile().delete()
         val authorPageContent = TEMPLATE
             .replace(KEY_PAGE_TITLE, "${author.name} - ${author.email} | show-todo")
-            .replace(KEY_PAGE_CONTENT, getAuthorPageContent(projectDir, author, authorTodos))
+            .replace(KEY_PAGE_CONTENT, getAuthorPageContent(projectDir, author, authorLines))
 
         authorPage.writeText(authorPageContent)
     }
 
-    private fun getAuthorPageContent(projectDir: File, author: Author, authorTodos: List<Todo>): String {
+    private fun getAuthorPageContent(projectDir: File, author: Author, authorLines: List<Line>): String {
         val sb = StringBuilder()
         sb.append(
             """
@@ -55,7 +55,7 @@ internal object AuthorPageGenerator {
             <h2>${author.name} <small>(${author.email})</small> </h2>
         """.trimIndent()
         )
-        for (todo in authorTodos) {
+        for (todo in authorLines) {
             val highlightContent = parseHighlightContent(todo)
             sb.append(
                 """
@@ -87,10 +87,10 @@ internal object AuthorPageGenerator {
         }
     }
 
-    private fun parseHighlightContent(todo: Todo): String {
-        val lines = todo.file.readLines()
-        val lineRange = (todo.lineNo - 2).coerceAtLeast(0)..(todo.lineNo + 2).coerceAtMost(lines.size)
-        return todo.file
+    private fun parseHighlightContent(line: Line): String {
+        val lines = line.file.readLines()
+        val lineRange = (line.lineNo - 2).coerceAtLeast(0)..(line.lineNo + 2).coerceAtMost(lines.size)
+        return line.file
             .readLines()
             .filterIndexed { index, _ -> (index + 1) in lineRange }
             .joinToString(separator = "\n")
