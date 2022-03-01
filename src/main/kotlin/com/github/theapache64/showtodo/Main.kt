@@ -9,7 +9,8 @@ import kotlin.io.path.absolutePathString
 
 enum class Mode {
     TODO,
-    DOUBLE_BANG
+    DOUBLE_BANG,
+    DOUBLE_BANG_NO_TESTS
 }
 
 fun main(args: Array<String>) {
@@ -24,6 +25,7 @@ fun main(args: Array<String>) {
 
     val mode = when {
         args.contains("bang") -> Mode.DOUBLE_BANG
+        args.contains("bang-no-tests") -> Mode.DOUBLE_BANG_NO_TESTS
         else -> Mode.TODO
     }
     println("➡️ Mode: $mode")

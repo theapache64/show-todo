@@ -20,7 +20,10 @@ object TodoParser {
         val iterator = projectDir.walk()
             .onEnter { directory -> !GitUtils.isGitIgnored(projectDir, directory) && directory.name != ".git" }
             .filter { file ->
-                !file.isDirectory && !GitUtils.isGitIgnored(projectDir, file) && !FileUtils.isBinaryFile(file)
+                !file.isDirectory &&  // not a directory
+                        !GitUtils.isGitIgnored(projectDir, file) && // not a gitignored file
+                        !FileUtils.isBinaryFile(file) && // not a binary file
+                        isModeCompatible(mode, file)
             }
             .iterator()
 
@@ -44,10 +47,20 @@ object TodoParser {
         return lines
     }
 
+    private fun isModeCompatible(mode: Mode, file: File): Boolean {
+        return when (mode) {
+            Mode.DOUBLE_BANG_NO_TESTS -> {
+                !file.absolutePath.contains("${File.separator}test${File.separator}") && // shouldn't a file from test directory
+                !file.absolutePath.contains("${File.separator}androidTest${File.separator}") // or androidTest directory
+            }
+            else -> true // Other page doesn't have mode specific file rules
+        }
+    }
+
     private fun isMatch(mode: Mode, line: String): Boolean {
         return when (mode) {
             Mode.TODO -> hasTodo(line.trim())
-            Mode.DOUBLE_BANG -> line.contains("!!")
+            Mode.DOUBLE_BANG,Mode.DOUBLE_BANG_NO_TESTS -> line.contains("!!")
         }
     }
 
