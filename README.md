@@ -17,13 +17,16 @@ https://user-images.githubusercontent.com/9678279/154778564-ba5faaa2-47f1-49e3-8
 
 ## 🚀 Install 
 
-```
+```shell
 $ sudo npm install -g show-todo
 ```
 
 ## ⌨️ Usage
-```
-$ show-todo
+```shell
+$ show-todo # To show all TODOs
+$ show-todo bang # To show all double bangs (!!)
+$ show-todo bang-no-tests # To show all double bangs with test/androidTest dirs excluded
+$ show-todo open # To open the last generated report
 ```
 
 ## ✍️ Author
